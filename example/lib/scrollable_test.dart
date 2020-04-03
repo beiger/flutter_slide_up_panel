@@ -95,7 +95,6 @@ class ScrollableTestState extends State<ScrollableTest> with TickerProviderState
 
 	Widget _panel() {
 		return CustomScrollView(
-			physics: ClampingScrollPhysics(),
 			slivers: <Widget>[
 				SliverPadding(
 					padding: EdgeInsets.fromLTRB(14, 14, 14, 14),

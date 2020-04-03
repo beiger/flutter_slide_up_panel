@@ -70,7 +70,7 @@ class PanelScrollPosition extends ScrollPosition implements ScrollActivityDelega
 
 	@override
 	double setPixels(double newPixels) {
-		print("-----setPixels: $newPixels");
+//		print("-----setPixels: $newPixels");
 		assert(activity.isScrolling);
 		return super.setPixels(newPixels);
 	}
@@ -122,11 +122,25 @@ class PanelScrollPosition extends ScrollPosition implements ScrollActivityDelega
 
 	void panelConsume(double delta) {
 		if (delta <= 0) { // 向上滑动
+			// 先由panel消费
 			var remain = delta - panelController.consume(delta);
-			setPixels(pixels - physics.applyPhysicsToUserOffset(this, remain));
+			if (remain != 0) {
+				setPixels(pixels - physics.applyPhysicsToUserOffset(this, remain));
+			}
 		} else { //向下滑动
-			var overscroll = setPixels(pixels - physics.applyPhysicsToUserOffset(this, delta));
-			panelController.consume(-overscroll);
+			// 先判断position是否到达边界
+			if (pixels <= minScrollExtent) {
+				panelController.consume(delta);
+			} else {
+				var scrollLength = pixels - minScrollExtent;
+				if (delta > scrollLength) {
+					var overscroll = setPixels(pixels - physics.applyPhysicsToUserOffset(this, scrollLength));
+					panelController.consume(delta - scrollLength - overscroll);
+				} else {
+					var overscroll = setPixels(pixels - physics.applyPhysicsToUserOffset(this, delta));
+					panelController.consume(-overscroll);
+				}
+			}
 		}
 	}
 
@@ -147,16 +161,17 @@ class PanelScrollPosition extends ScrollPosition implements ScrollActivityDelega
 	@override
 	void goBallistic(double velocity) {
 		assert(pixels != null);
-		if(!panelController.canFling(velocity, this)) {
-			final Simulation simulation = physics.createBallisticSimulation(this, velocity);
-			if (simulation != null) {
-				beginActivity(PanelBallisticScrollActivity(this, simulation, context.vsync));
-			} else {
-				goIdle();
-			}
+		var v = velocity;
+		if (panelController.canFling(velocity, this)) {
+			panelController.goBallistic(velocity);
+			v = 0;
+		}
+
+		final Simulation simulation = physics.createBallisticSimulation(this, v);
+		if (simulation != null) {
+			beginActivity(PanelBallisticScrollActivity(this, simulation, context.vsync));
 		} else {
 			goIdle();
-			panelController.goBallistic(velocity);
 		}
 	}
 
