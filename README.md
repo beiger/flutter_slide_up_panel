@@ -4,7 +4,7 @@ A new Flutter plugin.
 
 ## capture
 
-![image]()
+![image](https://github.com/beiger/flutter_slide_up_panel/blob/master/gif/2.gif)
 
 ## Getting Started
 
