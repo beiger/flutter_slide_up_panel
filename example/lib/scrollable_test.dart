@@ -22,7 +22,7 @@ class ScrollableTestState extends State<ScrollableTest> with TickerProviderState
 		super.initState();
 		_controller = PanelController(
 				minHeight: 56,
-				maxHeight: 650,
+				maxHeight: 500,
 				vsync: this
 		);
 		_streamController = StreamController<int>();
@@ -95,6 +95,7 @@ class ScrollableTestState extends State<ScrollableTest> with TickerProviderState
 
 	Widget _panel() {
 		return CustomScrollView(
+			physics: BouncingScrollPhysics(),
 			slivers: <Widget>[
 				SliverPadding(
 					padding: EdgeInsets.fromLTRB(14, 14, 14, 14),

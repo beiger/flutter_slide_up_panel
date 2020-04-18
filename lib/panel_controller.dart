@@ -56,8 +56,7 @@ class PanelController extends ValueNotifier<double> {
 	bool isFling() {
 		return _currentAniController != null;
 	}
-
-	//返回剩余的速度
+	
 	void goBallistic(double velocity) {
 		if (_currentAniController != null) return;
 		double dest;
@@ -73,7 +72,7 @@ class PanelController extends ValueNotifier<double> {
 		_currentAniController = AnimationController(duration: Duration(milliseconds: milliSecond.toInt()), vsync: vsync);
 		var animation = Tween(begin: height, end: dest).animate(CurvedAnimation(
 			parent: _currentAniController,
-			curve: Curves.easeOutQuart
+			curve: Curves.easeOutCubic
 		));
 		animation.addListener(() {
 			height = animation.value;

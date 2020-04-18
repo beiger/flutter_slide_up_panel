@@ -22,7 +22,7 @@ class NormalTestState extends State<NormalTest> with TickerProviderStateMixin {
 		super.initState();
 		_controller = PanelController(
 				minHeight: 56,
-				maxHeight: 650,
+				maxHeight: 500,
 				vsync: this
 		);
 		_streamController = StreamController<int>();
